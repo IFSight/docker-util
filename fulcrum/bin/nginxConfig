@@ -1,0 +1,5 @@
+#!/bin/sh
+
+node /fulcrum/node/fulcrumConfs.js    /fulcrum/conf > /fulcrum/etc/nginx/fulcrum/fulcrum_config.conf
+node /fulcrum/node/fulcrumEnvs.js     /fulcrum/conf > /fulcrum/etc/nginx/fulcrum/fulcrum_env.conf
+node /fulcrum/node/fulcrumWebroots.js /fulcrum/conf > /fulcrum/etc/nginx/fulcrum/fulcrum_webroot.conf
