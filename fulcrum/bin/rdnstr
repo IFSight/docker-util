@@ -1,0 +1,10 @@
+#!/bin/sh
+
+CHARS=32
+
+if [ ! -z $1 ];
+then
+    CHARS=$1
+fi
+
+cat /dev/urandom|LC_CTYPE=C tr -dc '_a-zA-Z0-9-'|fold -w $CHARS|head -n 1
