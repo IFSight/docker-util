@@ -2,8 +2,8 @@
 
 # see if we have a conf to process first
 if [[ -z $1 && -z $2 ]]; then
-  echo "Writing $FULCRUM_SITE.json from $FUCRUM_CNF_TPL"
-  /usr/bin/envsubst < /fulcrum/conf/$FUCRUM_CNF_TPL > /fulcrum/conf/$FULCRUM_SITE.json
+  echo "Writing $1.json from $2"
+  /usr/bin/envsubst < /fulcrum/conf/$1 > /fulcrum/conf/$2.json
 fi
 
 echo "Writing nginx conf from conf/*.json"
