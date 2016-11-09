@@ -1,8 +1,8 @@
 #!/bin/sh
 
 # see if we have a conf to process first
-if [[ -z $1 && -z $2 ]]; then
-  echo "Writing $1.json from $2"
+if [[ ! -z $1 && ! -z $2 ]]; then
+  echo "Writing $2.json from $1: /usr/bin/envsubst < /fulcrum/conf/$1 > /fulcrum/conf/$2.json"
   /usr/bin/envsubst < /fulcrum/conf/$1 > /fulcrum/conf/$2.json
 fi
 
