@@ -1,5 +1,12 @@
 #!/bin/sh
 
+# see if we have a conf to process first
+if [[ -z $1 && -z $2 ]]; then
+  echo "Writing $FULCRUM_SITE.json from $FUCRUM_CNF_TPL"
+  /usr/bin/envsubst < /fulcrum/conf/$FUCRUM_CNF_TPL > /fulcrum/conf/$FULCRUM_SITE.json
+fi
+
+echo "Writing nginx conf from conf/*.json"
 node /fulcrum/node/fulcrumConfs.js    /fulcrum/conf > /fulcrum/etc/nginx/fulcrum/fulcrum_config.conf
 node /fulcrum/node/fulcrumEnvs.js     /fulcrum/conf > /fulcrum/etc/nginx/fulcrum/fulcrum_env.conf
 node /fulcrum/node/fulcrumWebroots.js /fulcrum/conf > /fulcrum/etc/nginx/fulcrum/fulcrum_webroot.conf
