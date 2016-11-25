@@ -17,7 +17,7 @@ process.stdin.on('end', function() {
   for (var i = 0; i < cfgs.length; i++) {
     site = cfgs[i].webroot;
 
-    if (typeof cfgs[i].site !=== 'undefined') {
+    if (typeof cfgs[i].site !== 'undefined') {
       site = cfgs[i].site;
     }
 
