@@ -11,12 +11,19 @@ process.stdin.on('end', function() {
   var cfgs    = JSON.parse(input),
       envMap  = '',
       webMap  = '',
-      cnfMap  = '';
+      cnfMap  = '',
+      site;
 
   for (var i = 0; i < cfgs.length; i++) {
-    envMap += '  ' + cfgs[i].site + '    \'' + cfgs[i].env             + '\';\n';
-    webMap += '  ' + cfgs[i].site + '    \'' + cfgs[i].webroot         + '\';\n';
-    cnfMap += '  ' + cfgs[i].site + '    \'' + JSON.stringify(cfgs[i]) + '\';\n';
+    site = cfgs[i].webroot;
+
+    if (typeof cfgs[i].site !=== 'undefined') {
+      site = cfgs[i].site;
+    }
+
+    envMap += '  ' + site + '    \'' + cfgs[i].env             + '\';\n';
+    webMap += '  ' + site + '    \'' + cfgs[i].webroot         + '\';\n';
+    cnfMap += '  ' + site + '    \'' + JSON.stringify(cfgs[i]) + '\';\n';
   }
 
   process.stdout.write('map $host $fulcrum_env     {\n  hostnames;\n\n' + envMap + '}\n\n');
