@@ -14,9 +14,9 @@ process.stdin.on('end', function() {
       cnfMap  = '';
 
   for (var i = 0; i < cfgs.length; i++) {
-    envMap += '  ' + cfgs[i].webroot + '    \'' + cfgs[i].env             + '\';\n';
-    webMap += '  ' + cfgs[i].webroot + '    \'' + cfgs[i].webroot         + '\';\n';
-    cnfMap += '  ' + cfgs[i].webroot + '    \'' + JSON.stringify(cfgs[i]) + '\';\n';
+    envMap += '  ' + cfgs[i].site + '    \'' + cfgs[i].env             + '\';\n';
+    webMap += '  ' + cfgs[i].site + '    \'' + cfgs[i].webroot         + '\';\n';
+    cnfMap += '  ' + cfgs[i].site + '    \'' + JSON.stringify(cfgs[i]) + '\';\n';
   }
 
   process.stdout.write('map $host $fulcrum_env     {\n  hostnames;\n\n' + envMap + '}\n\n');
