@@ -18,7 +18,7 @@ process.stdin.on('end', function () {
       webMap  = '',
       cnfMap  = '',
       sites   = {},
-      site;
+      site, dest_meta, dest;
 
   /* make easier to address */
   for (var i = 0; i < cfgs.sites.length; i++) {
@@ -30,11 +30,30 @@ process.stdin.on('end', function () {
     sites[cfgs.sites[i].site] = cfgs.sites[i];
   }
 
-  /* add the aliases */
-  for (var src in cfgs.aliases) {
-    if (sites.hasOwnProperty(src)) {
-      sites[cfgs.aliases[src]] = sites[src];
-      sites[cfgs.aliases[src]].site = cfgs.aliases[src];
+  /* add aliases.json, e.g. :
+    {
+      "*.example.ifdev" : {"src" : "www.example.ifdev"},
+      "www.foobar.ifdev" : {"src" : "www.barfoo.ifdev", "cookie_domain" : ".foobar.ifdev"}
+    }
+  */
+  for (var dest_site in cfgs.aliases) {
+    dest_meta = cfgs.aliases[dest_site];
+
+    /* make sure src is defined for dest and src actually exist in sites */
+    if (dest_meta.hasOwnProperty('src') && sites.hasOwnProperty(dest_meta.src)) {
+      /* copy the src object */
+      dest = sites[dest_meta.src];
+
+      /* override the site with the alias site */
+      dest.site = dest_meta.site;
+
+      /* see if we have a cookie_domain */
+      if (typeof dest_meta.cookie_domain !== 'undefined') {
+        dest.pre.replace.cookie_domain = dest_meta.cookie_domain;
+      }
+
+      /* add to sites object */
+      sites[dest_site] = dest;
     }
   }
 
