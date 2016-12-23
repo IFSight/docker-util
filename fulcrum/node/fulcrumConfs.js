@@ -41,8 +41,8 @@ process.stdin.on('end', function () {
 
     /* make sure src is defined for dest and src actually exist in sites */
     if (dest_meta.hasOwnProperty('src') && sites.hasOwnProperty(dest_meta.src)) {
-      /* copy the src object */
-      dest = sites[dest_meta.src];
+      /* copy the src object, as string to avoid change by reference */
+      dest = JSON.parse(JSON.stringify(sites[dest_meta.src]));
 
       /* override the site with the alias site */
       dest.site = dest_meta.site;
