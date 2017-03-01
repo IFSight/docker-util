@@ -47,13 +47,11 @@ process.stdin.on('end', function () {
       /* override the site with the alias site */
       dest.site = dest_meta.site;
 
-      /* see if we have a cookie_domain */
-      if (typeof dest_meta.cookie_domain !== 'undefined') {
-        dest.pre.replace.cookie_domain = dest_meta.cookie_domain;
-      }
-
-      if (typeof dest_meta.force_https !== 'undefined') {
-        dest.pre.replace.force_https = dest_meta.force_https;
+      /* loop over aliase overides besides the src */
+      for (var attr in dest_meta) {
+        if (attr !== 'src') {
+          dest.pre.replace[attr] = dest_meta[attr];
+        }
       }
 
       /* add to sites object */
