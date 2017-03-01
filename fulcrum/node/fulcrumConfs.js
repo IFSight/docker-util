@@ -52,6 +52,10 @@ process.stdin.on('end', function () {
         dest.pre.replace.cookie_domain = dest_meta.cookie_domain;
       }
 
+      if (typeof dest_meta.force_https !== 'undefined') {
+        dest.pre.replace.force_https = dest_meta.force_https;
+      }
+
       /* add to sites object */
       sites[dest_site] = dest;
     }
