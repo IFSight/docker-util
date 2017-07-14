@@ -17,6 +17,7 @@ process.stdin.on('end', function () {
       envMap  = '',
       webMap  = '',
       cnfMap  = '',
+      officeMap  = '',
       sites   = {},
       site, dest_meta, dest;
 
@@ -63,9 +64,15 @@ process.stdin.on('end', function () {
     envMap += '  ' + site + '    \'' + sites[site].env             + '\';\n';
     webMap += '  ' + site + '    \'' + sites[site].webroot         + '\';\n';
     cnfMap += '  ' + site + '    \'' + JSON.stringify(sites[site]) + '\';\n';
+
+    /* if ttl_office_docs is set, use it */
+    if (typeof sites[site].ttl_office_docs !== 'undefined') {
+      officeMap += '  ' + site + '    ' + JSON.stringify(sites[site].ttl_office_docs) + ';\n';
+    }
   }
 
   process.stdout.write('map $host $fulcrum_env     {\n  hostnames;\n\n' + envMap + '}\n\n');
   process.stdout.write('map $host $fulcrum_webroot {\n  hostnames;\n\n' + webMap + '}\n\n');
   process.stdout.write('map $host $fulcrum_conf    {\n  hostnames;\n\n' + cnfMap + '}\n\n');
+  process.stdout.write('map $host $ttl_office_docs {\n  hostnames;\n\n  default 3d;\n\n' + officeMap + '}\n\n');
 });
