@@ -14,12 +14,15 @@ process.stdin.on('data', function (chunk) {
 
 process.stdin.on('end', function () {
   var cfgs    = JSON.parse(input),
-      envMap  = '',
-      webMap  = '',
-      cnfMap  = '',
-      docMap  = '',
+      optMaps = {
+        'fulcrum_doc_ttl' : 'map $host $fulcrum_doc_ttl {\n  hostnames;\n\n  default 3d;\n\n',
+        'fulcrum_s3'      : 'map $host $fulcrum_s3      {\n  hostnames;\n\n'
+      },
+      envMap  = 'map $host $fulcrum_env     {\n  hostnames;\n\n',
+      webMap  = 'map $host $fulcrum_webroot {\n  hostnames;\n\n',
+      cnfMap  = 'map $host $fulcrum_conf    {\n  hostnames;\n\n',
       sites   = {},
-      site, dest_meta, dest;
+      site, dest_meta, dest, opt;
 
   /* make easier to address */
   for (var i = 0; i < cfgs.sites.length; i++) {
@@ -61,18 +64,27 @@ process.stdin.on('end', function () {
   }
 
   for (site in sites) {
+    /* if optional maps exist then set it */
+    for (opt in optMaps) {
+      if (typeof sites[site][opt] !== 'undefined') {
+        optMaps[opt] += '  ' + site + '    ' + JSON.stringify(sites[site][opt]) + ';\n';
+      }
+    }
+
     envMap += '  ' + site + '    \'' + sites[site].env             + '\';\n';
     webMap += '  ' + site + '    \'' + sites[site].webroot         + '\';\n';
     cnfMap += '  ' + site + '    \'' + JSON.stringify(sites[site]) + '\';\n';
-
-    /* if fulcrum_doc_ttl is set, use it */
-    if (typeof sites[site].fulcrum_doc_ttl !== 'undefined') {
-      docMap += '  ' + site + '    ' + JSON.stringify(sites[site].fulcrum_doc_ttl) + ';\n';
-    }
   }
 
-  process.stdout.write('map $host $fulcrum_env     {\n  hostnames;\n\n' + envMap + '}\n\n');
-  process.stdout.write('map $host $fulcrum_webroot {\n  hostnames;\n\n' + webMap + '}\n\n');
-  process.stdout.write('map $host $fulcrum_conf    {\n  hostnames;\n\n' + cnfMap + '}\n\n');
-  process.stdout.write('map $host $fulcrum_doc_ttl {\n  hostnames;\n\n  default 3d;\n\n' + docMap + '}\n\n');
+  for (opt in optMaps) {
+    stdoutWriteMapWithEnd(optMaps[opt]);
+  }
+
+  stdoutWriteMapWithEnd(envMap);
+  stdoutWriteMapWithEnd(webMap);
+  stdoutWriteMapWithEnd(cnfMap);
 });
+
+function stdoutWriteMapWithEnd(str) {
+  process.stdout.write(str + '}\n\n');
+}
